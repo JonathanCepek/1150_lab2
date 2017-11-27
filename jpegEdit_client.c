@@ -31,8 +31,8 @@ int main(int argc, const char * argv[]) {
     FILE *fP;
     fP = fopen(filename, "r");
     
-    fseek(fp, 0L, SEEK_END);
-    f_size = ftell(fp);
+    fseek(fP, 0L, SEEK_END);
+    f_size = ftell(fP);
     rewind(fP); //double check this works
     
     fread(&f_buffer, sizeof(f_buffer), 1, fP);
@@ -79,7 +79,6 @@ int main(int argc, const char * argv[]) {
     {
         perror("send size");
         close(sockfd);
-        continue;
     }
 
     //Send File
@@ -88,7 +87,6 @@ int main(int argc, const char * argv[]) {
     {
         perror("send file");
         close(sockfd);
-        continue;
     }
     
     
