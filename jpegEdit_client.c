@@ -15,6 +15,7 @@ int main(int argc, const char * argv[]) {
     int sockfd = 0, c_len = 0, h_len = 0, rv, f_size, len;
     struct addrinfo hints, *servinfo, *p;
     char f_buffer[MAXSIZE] = {0};
+    char lil_buffer[1024] = {0};
     const char *filename;
     
     if(argc == 2)
@@ -74,7 +75,7 @@ int main(int argc, const char * argv[]) {
     }
     
     //Send File Size
-    len = send(sockfd, f_size, sizeof(file_size), 0);
+    len = send(sockfd, (uint32_t *)f_size, sizeof(f_size), 0);
     if (len < 0)
     {
         perror("send size");
@@ -82,7 +83,8 @@ int main(int argc, const char * argv[]) {
     }
 
     //Send File
-    len = send(sockfd, f_buffer, sizeof(f_buffer), 0);
+    //len = send(sockfd, f_buffer, sizeof(f_buffer), 0);
+    len = send(sockfd, lil_buffer, sizeof(lil_buffer), 0); //debug
     if (len < 0)
     {
         perror("send file");

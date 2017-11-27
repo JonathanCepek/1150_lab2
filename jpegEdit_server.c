@@ -13,54 +13,35 @@
 int main(int argc, const char * argv[]) {
 
     int sockfd = 0, connfd, c_len = 0, h_len = 0, rv, f_size, len;
-    struct addrinfo hints, *servinfo, *p;
+    struct sockaddr_in addr;
     char f_buffer[MAXSIZE] = {0};
     char lil_buffer[1024] = {0};
     const char *filename;
     
-    if(argc == 2)
+    if(argc != 1)
     {
-        filename = argv[1];
-    }
-    else
-    {
-        printf("\Error with arguments\n");
+        printf("Error with arguments\n");
     }
     
-    memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    
-    if ((rv = getaddrinfo(HOSTNAME, PORT, &hints, &servinfo)) != 0)
+    sockfd = socket(PF_INET, SOCK_STREAM, 0);
+    if(sockfd < 0)
     {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-        exit(1);
+        perror("Error initializing socket\n");
+        return 1;
     }
     
-    //connect to the first result we can
-    for (p = servinfo; p != NULL; p = p->ai_next)
-    {
-        if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
-        {
-            perror("socket");
-            continue;
-        }
-        
-        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1)
-        {
-            perror("connect");
-            close(sockfd);
-            continue;
-        }
-        
-        break; //getting here means we have successfully connected to a server
-    }
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(PORT);
+    addr.sin_addr.s_addr = INADDR_ANY;
     
-    if (p == NULL)
+    int b = 0;
+    
+    b = bind(sockfd, (struct sockaddr *)&addr, sizeof(addr));
+    if(b < 0)
     {
-        fprintf(stderr, "failed to connect\n");
-        exit(2);
-        
+        perror("Error setting up port\n");
+        return 1;
     }
     
     //Listen
