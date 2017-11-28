@@ -316,7 +316,28 @@ int main(int argc, const char * argv[]) {
             fseek(fP, file_loc, SEEK_SET);
     }
         //************************************
-        //
+        // add to text file
+		FILE *old_file;
+
+		old_file= fopen("old_tiff.txt","w+");
+		fprintf(old_file, "This is the original JPEG TIFF info: \n");
+		fprintf(old_file, "\nManufacturer: %s", man);
+		fprintf(old_file, "\nModel: %s", model);
+		fprintf(old_file, "\nDate: %s", date);
+		fprintf(old_file, "\nWidth: %d", width);
+		fprintf(old_file, "\nHeight: %d", height);
+		fprintf(old_file, "\nISO: %d", iso);
+		
+		fclose(old_file);
+		
+		man = "Pizza";
+		model = "Pepperoni";
+		date = "2017.11.27";
+		width = 412;
+		height = 343;
+		iso = 7788;
+		
+		// put together the numbers for width, height and iso for one of my favorite Pgh pizza places
         
         
         
